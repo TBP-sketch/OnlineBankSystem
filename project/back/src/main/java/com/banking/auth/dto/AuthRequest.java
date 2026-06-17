@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 /**
+ * &#064;weijh
  * 认证模块请求 DTO 集合
  */
 public class AuthRequest {

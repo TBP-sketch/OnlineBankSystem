@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * weijh
  * 用户实体 - 对接其他成员（成员C账户模块通过 userId 关联）
  */
 @Entity

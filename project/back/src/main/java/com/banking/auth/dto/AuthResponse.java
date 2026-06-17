@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
+ * weijh
  * 认证模块响应 DTO 集合
  */
 public class AuthResponse {

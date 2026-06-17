@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
- * OTP 记录实体
+ * OTP 记录实体，weijh
  * 存储一次性验证码（注册验证 / 登录二步验证 / 找回密码）
  */
 @Entity

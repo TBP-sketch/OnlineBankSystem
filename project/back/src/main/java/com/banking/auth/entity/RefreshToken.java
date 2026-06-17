@@ -6,8 +6,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
+ * weijh
  * Refresh Token 持久化实体
- * 不使用 Redis，改用数据库存储
  */
 @Entity
 @Table(name = "refresh_tokens", indexes = {

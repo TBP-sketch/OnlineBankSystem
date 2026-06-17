@@ -34,8 +34,10 @@ public class JwtUtil {
 
     // ===== 生成 Token =====
 
+    /** 签发 Access Token：携带 role、userId，用于日常 API 访问 */
     public String generateAccessToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        // 角色写入 payload，供权限判断
         claims.put("role", userDetails.getAuthorities().stream()
                 .map(Object::toString).findFirst().orElse(""));
         if (userDetails instanceof User user && user.getId() != null) {
@@ -44,10 +46,12 @@ public class JwtUtil {
         return buildToken(claims, userDetails.getUsername(), accessTokenExpiration);
     }
 
+    /** 签发 Refresh Token：仅含用户名，有效期更长，存库管理 */
     public String generateRefreshToken(UserDetails userDetails) {
         return buildToken(new HashMap<>(), userDetails.getUsername(), refreshTokenExpiration);
     }
 
+    /** 组装 JWT：自定义 claims + subject(用户名) + 签发/过期时间 + 签名 */
     private String buildToken(Map<String, Object> extraClaims,
                                String subject,
                                long expiration) {

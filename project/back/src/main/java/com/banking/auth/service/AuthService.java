@@ -51,7 +51,8 @@ public class AuthService {
                 && userRepository.existsByPhone(request.getPhone())) {
             throw new AuthException.UserAlreadyExistsException("手机号已注册");
         }
-
+        
+        //创建用户对象
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -65,6 +66,7 @@ public class AuthService {
         // 发送邮箱验证 OTP
         otpService.generateAndSend(user.getEmail(), OtpType.EMAIL_VERIFY);
 
+        //返回注册结果
         return RegisterResult.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
@@ -74,7 +76,7 @@ public class AuthService {
                 .build();
     }
 
-    // ===== 邮箱验证 =====
+    // ===== 邮箱验证模块 =====
 
     @Transactional
     public void verifyEmail(String email, String code) {
@@ -85,14 +87,20 @@ public class AuthService {
             throw new AuthException.InvalidOtpException("邮箱已验证，无需重复操作");
         }
 
+        //校验OTP
         otpService.verify(email, code, OtpType.EMAIL_VERIFY);
+        //更新用户邮箱验证状态
         userRepository.verifyEmail(user.getId());
+        //打日志
         log.info("用户 {} 邮箱验证成功", user.getUsername());
     }
 
     // ===== 登录 =====
 
-    @Transactional
+    @Transactional(noRollbackFor = {
+            AuthException.InvalidCredentialsException.class,
+            AuthException.AccountLockedException.class
+    })
     public LoginResult login(AuthRequest.Login request, String clientInfo) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AuthException.InvalidCredentialsException("用户名或密码错误"));
